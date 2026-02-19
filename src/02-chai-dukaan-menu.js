@@ -33,7 +33,7 @@ export function formatChaiMenu(items) {
     return "";
   }else{
     const filterValue = items.filter((e) => {
-      e.price > 0 && typeof e.name === 'string' && e.name.length > 0; 
+      return e.price > 0 && typeof e.name === 'string' && e.name.length > 0; 
     });
 
     const itemValue = filterValue.map((e) => {
