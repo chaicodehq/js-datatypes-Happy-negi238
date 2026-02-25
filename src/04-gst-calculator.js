@@ -40,4 +40,76 @@
  */
 export function calculateGST(amount, category) {
   // Your code here
+  if (typeof category === 'string') {
+    const categoryLower = category.toLowerCase();
+    const categoryArr = ['essential', 'food', 'standard', 'electronics',
+      'luxury'
+    ];
+    let categoryFlag = false;
+
+    for (let i = 0; i < categoryArr.length; i++) {
+      if (categoryArr[i] === categoryLower) {
+        categoryFlag = true;
+        break;
+      }
+    }
+    if (categoryFlag && Number.isFinite(amount) && amount > 0) {
+      let gstAmount;
+      let totalAmount;
+      let gstRate;
+      let baseAmount;
+      if (categoryLower === 'essential') {
+
+        gstRate = 0;
+        gstAmount = parseFloat((amount * gstRate / 100).toFixed(2));
+        totalAmount = parseFloat((gstAmount + amount).toFixed(2));
+        baseAmount = amount;
+
+        return ({ baseAmount: baseAmount, gstRate: gstRate, gstAmount: gstAmount, totalAmount: totalAmount });
+      } else if (categoryLower === 'food') {
+
+        gstRate = 5;
+        gstAmount = parseFloat((amount * gstRate / 100).toFixed(2));
+        totalAmount = parseFloat((gstAmount + amount).toFixed(2));
+        baseAmount = amount;
+
+        return ({ baseAmount: baseAmount, gstRate: gstRate, gstAmount: gstAmount, totalAmount: totalAmount });
+
+      } else if (categoryLower === 'standard') {
+
+        gstRate = 12;
+        gstAmount = parseFloat((amount * gstRate / 100).toFixed(2));
+        totalAmount = parseFloat((gstAmount + amount).toFixed(2));
+        baseAmount = amount;
+
+        return ({ baseAmount: baseAmount, gstRate: gstRate, gstAmount: gstAmount, totalAmount: totalAmount });
+
+
+      } else if (categoryLower === 'electronics') {
+
+        gstRate = 18;
+        gstAmount = parseFloat((amount * gstRate / 100).toFixed(2));
+        totalAmount = parseFloat((gstAmount + amount).toFixed(2));
+        baseAmount = amount;
+
+        return ({ baseAmount: baseAmount, gstRate: gstRate, gstAmount: gstAmount, totalAmount: totalAmount });
+
+
+      } else if (categoryLower === 'luxury') {
+
+        gstRate = 28;
+        gstAmount = parseFloat((amount * gstRate / 100).toFixed(2));
+        totalAmount = parseFloat((gstAmount + amount).toFixed(2));
+        baseAmount = amount;
+
+        return ({ baseAmount: baseAmount, gstRate: gstRate, gstAmount: gstAmount, totalAmount: totalAmount });
+
+
+      }
+    } else {
+      return null;
+    }
+  } else {
+    return null;
+  }
 }

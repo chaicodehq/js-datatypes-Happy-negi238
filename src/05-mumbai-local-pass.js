@@ -43,4 +43,34 @@
  */
 export function generateLocalPass(passenger) {
   // Your code here
+  if (!Array.isArray(passenger) && passenger !== null && passenger !== undefined) {
+    if (passenger.hasOwnProperty('name') && passenger.hasOwnProperty('from') && passenger.hasOwnProperty('to') && passenger.hasOwnProperty('classType')) {
+      if (passenger.name.length > 0 && typeof passenger.name === 'string' && passenger.from.length > 0 && typeof passenger.from === 'string' &&
+        passenger.to.length > 0 && typeof passenger.to === 'string' && passenger.classType.length > 0 && typeof passenger.classType === 'string'
+
+      ) {
+        if (passenger.classType.toLowerCase() === 'first' || passenger.classType.toLowerCase() === 'second') {
+          let name = passenger.name.toUpperCase();
+          let from = passenger.from.charAt(0).toUpperCase() + passenger.from.slice(1).toLowerCase();
+          let to = passenger.to.charAt(0).toUpperCase() + passenger.to.slice(1).toLowerCase();
+          let standard = passenger.classType.toUpperCase();
+
+          let passID = passenger.classType.charAt(0).toUpperCase() + passenger.from.slice(0, 3).toUpperCase() + passenger.to.slice(0, 3).toUpperCase();
+          return `MUMBAI LOCAL PASS\n---\nName: ${name}\nFrom: ${from}\nTo: ${to}\nClass: ${standard}\nPass ID: ${passID}`;
+
+        } else {
+          return 'INVALID PASS';
+        }
+
+      } else {
+        return 'INVALID PASS';
+      }
+    } else {
+      return 'INVALID PASS';
+    }
+
+
+  } else {
+    return 'INVALID PASS';
+  }
 }

@@ -40,4 +40,50 @@
  */
 export function parseWhatsAppMessage(message) {
   // Your code here
+  if (typeof message !== 'string') {
+    return null;
+  } else {
+    const regex = /^.+:.+$/;
+    if (message.includes('-') && message.includes(":") && message.includes(",")) {
+      let afterSender = message.substring(message.trim().indexOf('- ') + 1);
+      if(afterSender.includes(":")){
+
+        let date = message.substring(0, message.indexOf(',')).trim();
+        let time = message.substring(message.indexOf(',') + 1, message.indexOf('-')).trim();
+        let sender = message.substring(message.indexOf('-') + 1, message.indexOf(': ')).trim();
+        let text = message.substring(message.indexOf(': ') + 1).trim();
+  
+        const wordSpilit = text.trim().toLowerCase().split(" ").map((e) => e.trim()).filter(Boolean);
+        const wordCount = wordSpilit.length;
+        let sentiment;
+  
+        if (wordSpilit.includes('haha') && wordSpilit.includes('😂') && wordSpilit.includes(":)") &&
+          wordSpilit.includes("❤") && wordSpilit.includes("love") && wordSpilit.includes("pyaar")) {
+  
+          sentiment = 'funny';
+          return ({ date: date, time: time, sender: sender, text: text, wordCount: wordCount, sentiment: sentiment });
+  
+        } else if (wordSpilit.includes('haha') || wordSpilit.includes('😂') || wordSpilit.includes(":)")) {
+  
+          sentiment = 'funny';
+          return ({ date: date, time: time, sender: sender, text: text, wordCount: wordCount, sentiment: sentiment });
+  
+        } else if (wordSpilit.includes("❤") || wordSpilit.includes("love") || wordSpilit.includes("pyaar")) {
+  
+          sentiment = 'love';
+          return ({ date: date, time: time, sender: sender, text: text, wordCount: wordCount, sentiment: sentiment });
+  
+        } else {
+  
+          sentiment = 'neutral';
+          return ({ date: date, time: time, sender: sender, text: text, wordCount: wordCount, sentiment: sentiment });
+  
+        }
+      }else{
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
 }
