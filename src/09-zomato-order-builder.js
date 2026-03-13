@@ -47,4 +47,82 @@
  */
 export function buildZomatoOrder(cart, coupon) {
   // Your code here
+  if (Array.isArray(cart) && cart.length > 0 && !cart.includes(null)) {
+
+    const filterQty = cart.filter((item) => item.qty > 0);
+
+    let subTotal = 0;
+
+    filterQty.forEach(item => {
+
+      let addonTotal = 0;
+
+      if (item.addons && item.addons.length > 0) {
+        item.addons.forEach(addon => {
+          addonTotal += parseInt(addon.split(":")[1]);
+        });
+      }
+
+      const itemTotal = (item.price + addonTotal) * item.qty;
+
+      subTotal += itemTotal;
+
+    });
+
+    let deliveryFee = 0;
+    const gst = parseFloat((subTotal * 5 / 100).toFixed(2));
+    let discount = 0;
+
+    if (subTotal < 500) {
+      deliveryFee = 30;
+    }
+    else if (subTotal >= 500 && subTotal < 999) {
+      deliveryFee = 15;
+    }
+    else if (subTotal >= 1000) {
+      deliveryFee = 0;
+    }
+
+    if (coupon === undefined || coupon === null || typeof coupon !== 'string') {
+      discount = 0;
+    } else {
+      if (coupon.toUpperCase() === 'FLAT100') {
+        discount = 100;
+      }
+      else if (coupon.toUpperCase() === 'FREESHIP') {
+        discount = deliveryFee;
+        deliveryFee = 0;
+      }
+      else if (coupon.toUpperCase() === 'FIRST50') {
+        discount = Math.min(subTotal * 50 / 100, 150);
+      }
+    }
+
+    const items = [];
+    filterQty.forEach((item) => {
+      const itemObject = {};
+      itemObject.name = item.name;
+      itemObject.qty = item.qty;
+      itemObject.basePrice = item.price;
+      let totalAddon = 0;
+      if (item.addons && item.addons.length > 0) {
+
+        item.addons.forEach((item) => {
+          totalAddon = totalAddon + parseInt(item.split(":")[1]);
+        })
+      }
+      itemObject.addonTotal = totalAddon;
+      itemObject.itemTotal = (item.price + totalAddon) * item.qty;
+      items.push(itemObject);
+    })
+
+    let grandTotal = parseFloat((subTotal + deliveryFee + gst - discount).toFixed(2));
+    if (grandTotal < 0) {
+      grandTotal = 0;
+    }
+
+    return { items: items, subtotal: subTotal, deliveryFee: deliveryFee, gst: gst, discount: discount, grandTotal: grandTotal }
+  } else {
+    return null;
+  }
 }

@@ -63,4 +63,60 @@
  */
 export function validateForm(formData) {
   // Your code here
+  if (Array.isArray(formData) || formData === null || typeof formData !== 'object') {
+    return null;
+  } else {
+    const error = {};
+    const trimmedName = formData.name.trim();
+    const trimmedEmail = formData.email.trim();
+    const trimmedPhone = formData.phone.trim();
+    const trimmedAge = formData.age;
+    const trimmedPincode = formData.pincode.trim();
+    const trimmedState = formData.state;
+    const trimmedAgreeTerms = formData.agreeTerms;
+
+    const phoneStartArray = ['6', '7', '8', '9'];
+    const phoneStartWith = phoneStartArray.some((item) => trimmedPhone.startsWith(item));
+
+    if (!(typeof trimmedName === 'string' && trimmedName.length >= 2 && trimmedName.length <= 50)) {
+      error.name = 'Name must be 2-50 characters';
+    }
+    if (!(typeof trimmedEmail === 'string' && trimmedEmail.includes('@')
+      && trimmedEmail.includes('.') &&
+      (trimmedEmail.indexOf("@") === trimmedEmail.lastIndexOf("@")) &&
+      (trimmedEmail.indexOf(".") > trimmedEmail.indexOf("@")))) {
+      error.email = "Invalid email format"
+    }
+    if (!(typeof trimmedPhone === 'string' && 
+      Number.isInteger(Number(trimmedPhone)) && 
+      trimmedPhone.length === 10
+      && phoneStartWith)) {
+      error.phone = "Invalid Indian phone number";
+    }
+
+    if(!(Number.isInteger(Number(trimmedAge))
+      && (Number(trimmedAge) >= 16 && Number(trimmedAge) <=100))){
+        error.age = "Age must be an integer between 16 and 100";
+    }
+
+    if(!(typeof trimmedPincode === 'string' && 
+      trimmedPincode.length === 6 && 
+        Number.isInteger(Number(trimmedPincode)) &&
+      !(trimmedPincode.startsWith('0')))){
+        error.pincode = "Invalid Indian pincode";
+    }
+
+    if(typeof trimmedState === 'string' && trimmedState.length > 0){
+      formData?.state ?? "";
+    }else{
+      error.state = "State is required";
+    }
+
+    if(!(Boolean(trimmedAgreeTerms) === true)){
+      error.agreeTerms = "Must agree to terms";
+    }
+
+    const isValid = Object.keys(error).length <= 0
+    return { isValid: isValid, errors: error };
+  }
 }

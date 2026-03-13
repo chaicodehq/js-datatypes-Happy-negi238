@@ -31,18 +31,28 @@
  */
 export function fixBollywoodTitle(title) {
   // Your code here
-  if(typeof title !== 'string'){
+  if (typeof title !== 'string') {
     return "";
-  }else{
+  } else {
     const trimValue = title.trim();
-    if(trimValue.length <= 0){
+    if (trimValue.length <= 0) {
       return "";
-    }else{
+    } else {
       const splitValue = trimValue.split(/\s+/);
+      const exception = ["ka", "ki", "ke", "se", "aur", "ya", "the", "of", "in", "a", "an"];
+
       const valueGet = splitValue.map((e) => {
         return e.charAt(0).toUpperCase() + e.slice(1).toLowerCase();
       })
-      return valueGet.join(" ");
+
+      const find = valueGet.map((item) => {
+        if (item !== valueGet[0] && exception.includes(item.toLowerCase())) {
+          return item.toLowerCase();
+        } else {
+          return item;
+        }
+      });
+      return find.join(" ");
     }
   }
 }

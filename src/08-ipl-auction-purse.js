@@ -45,4 +45,72 @@
  */
 export function iplAuctionSummary(team, players) {
   // Your code here
+  if (team === null || Array.isArray(team) || players === null || !Array.isArray(players)) {
+    return null;
+  } else {
+    const teamPurse = team.purse;
+    const teamName = team.name;
+    if (teamPurse === null || teamPurse < 0 || !Number.isInteger(teamPurse) || players.length <= 0 || teamName === null 
+    || typeof teamName !== 'string' || teamName.length <= 0) {
+      return null;
+    }
+    else {
+
+      const totalSpent = players.reduce((acc, curr) => {
+        return acc + curr.price
+      }, 0);
+      const playerCount = players.length;
+      const remaining = teamPurse - totalSpent;
+
+      const costliestPlayer = players.reduce((prev, curr) => {
+        return (prev.price > curr.price) ? prev : curr;
+      })
+      const cheapestPlayer = players.reduce((prev, curr) => {
+        return (prev.price < curr.price) ? prev : curr;
+      })
+
+      const averagePrice = Math.round(totalSpent / playerCount);
+      const isOverBudget = totalSpent > teamPurse;
+
+      const bat = players.reduce((acc, curr) => {
+        if (curr.role === 'bat') {
+          acc++;
+        }
+        return acc;
+      }, 0)
+
+      const bowl = players.reduce((acc, curr) => {
+        if (curr.role === 'bowl') {
+          acc++;
+        }
+        return acc;
+      }, 0)
+
+      const wk = players.reduce((acc, curr) => {
+        if (curr.role === 'wk') {
+          acc++;
+        }
+        return acc;
+      }, 0)
+
+      const ar = players.reduce((acc, curr) => {
+        if (curr.role === 'ar') {
+          acc++;
+        }
+        return acc;
+      }, 0)
+
+      const byRole = {bat: bat, bowl: bowl, ar: ar, wk: wk};
+      let byRoleTwo = {};
+      for(let[key, value] of Object.entries(byRole)){
+        if(value >= 1){
+          byRoleTwo[key] = value;
+        }
+      }
+
+      return ({ teamName: teamName, totalSpent: totalSpent, remaining: remaining, playerCount: playerCount, 
+        costliestPlayer: costliestPlayer, cheapestPlayer: cheapestPlayer, 
+        averagePrice: averagePrice, byRole: byRoleTwo, isOverBudget: isOverBudget });
+    }
+  }
 }
